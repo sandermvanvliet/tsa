@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-var tsa = require("../lib/Analyzer");
-var glob = require("glob");
-var ts = require("typescript")
 var fs = require("fs");
+var glob = require("glob");
+var ts = require("typescript");
+var tsa = require("../lib/Analyzer");
 
 var arg = process.argv.slice(2)[0];
 const fileNames = glob(arg, {}, function(err, files) {
