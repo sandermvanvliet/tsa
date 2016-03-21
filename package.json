@@ -1,0 +1,16 @@
+{
+  "name": "@codenizer/tsa",
+  "version": "0.0.1",
+  "description": "TypeScript code analysis",
+  "main": "bin/tsa.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "TypeScript",
+    "Sonar",
+    "SonarQube"
+  ],
+  "author": "Sander van Vliet",
+  "license": "MIT"
+}
