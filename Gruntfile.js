@@ -3,7 +3,7 @@ module.exports = function(grunt) {
         ts: {
             default: {
                 src: ["src/*.ts", "!node_modules/**/*.ts", "!typings/**/*.ts" ],
-                outDir: "out"
+                outDir: "lib"
             }
         }
     });
