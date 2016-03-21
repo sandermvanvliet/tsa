@@ -12,5 +12,13 @@
     "SonarQube"
   ],
   "author": "Sander van Vliet",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "systemjs": "^0.19.24",
+    "typescript": "^1.8.9",
+    "vorpal": "^1.10.8"
+  },
+  "devDependencies": {
+    "typings": "^0.7.9"
+  }
 }
