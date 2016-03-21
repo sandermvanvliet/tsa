@@ -10,10 +10,13 @@ export module SonarTypeScript {
         public analyzeFile(sourceFile: ts.SourceFile) {
             var fileMetrics = new d.Domain.FileMetric();
 
-            console.log(sourceFile);
-            analyzeNode(sourceFile);
+            this.analyzeNode(sourceFile, fileMetrics, sourceFile);
 
-            function analyzeNode(node: ts.Node) {
+            console.log("File: " + sourceFile.fileName);
+            console.log(fileMetrics);
+        }
+                    
+        private analyzeNode(node: ts.Node, fileMetrics: d.Domain.FileMetric, sourceFile: ts.SourceFile) {
                 console.log("node kind: " + ts.SyntaxKind[node.kind]);
 
                 switch (node.kind) {
@@ -37,15 +40,7 @@ export module SonarTypeScript {
                         break;
                 }
 
-                ts.forEachChild(node, analyzeNode);
+                ts.forEachChild(node, n => this.analyzeNode(n, fileMetrics, sourceFile));
             }
-            console.log("File: " + sourceFile.fileName);
-            console.log(fileMetrics);
-
-            function report(node: ts.Node, message: string) {
-                let { line, character } = sourceFile.getLineAndCharacterOfPosition(node.getStart());
-                console.log(`${sourceFile.fileName} (${line + 1},${character + 1}): ${message}`);
-            }
-        }
     }
 }
