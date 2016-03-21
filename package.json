@@ -4,6 +4,7 @@
   "description": "TypeScript code analysis",
   "main": "bin/tsa.js",
   "scripts": {
+      "build": "node_modules/grunt-cli/bin/grunt",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
