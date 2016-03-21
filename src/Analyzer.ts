@@ -4,21 +4,24 @@
 import {readFileSync} from "fs";
 import * as ts from "typescript";
 import d = require("./Domain");
+import o = require("./JsonOutput");
 
 export module SonarTypeScript {
     export class Analyzer {
+        constructor(private outputter: o.Output.IFileMetricOutput) {
+        }
+        
         public analyzeFile(sourceFile: ts.SourceFile) {
             var fileMetrics = new d.Domain.FileMetric();
 
             this.analyzeNode(sourceFile, fileMetrics, sourceFile);
 
             console.log("File: " + sourceFile.fileName);
-            console.log(fileMetrics);
+            
+            this.outputter.writeMetric(fileMetrics);
         }
                     
         private analyzeNode(node: ts.Node, fileMetrics: d.Domain.FileMetric, sourceFile: ts.SourceFile) {
-                console.log("node kind: " + ts.SyntaxKind[node.kind]);
-
                 switch (node.kind) {
                     case ts.SyntaxKind.ModuleDeclaration:
                         fileMetrics.NumberOfModules++;

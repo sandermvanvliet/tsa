@@ -15,6 +15,7 @@
   "author": "Sander van Vliet",
   "license": "MIT",
   "dependencies": {
+    "jsonfile": "^2.2.3",
     "node-glob": "^1.2.0",
     "systemjs": "^0.19.24",
     "typescript": "^1.8.9"
