@@ -17,10 +17,12 @@ const fileNames = glob(arg, {}, function(err, files) {
     files.forEach(fileName => {
         console.log("Parsing: " + fileName);
 
-        // Parse a file
-        var sourceFile = ts.createSourceFile(fileName, fs.readFileSync(fileName).toString(), ts.ScriptTarget.ES6, /*setParentNodes */ true);
+        var sourceFile = ts.createSourceFile(
+            fileName, 
+            fs.readFileSync(fileName).toString(), 
+            ts.ScriptTarget.ES6, 
+            /*setParentNodes */ true);
 
-        // delint it
         analyzer.analyzeFile(sourceFile);
     });
 });
