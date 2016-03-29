@@ -13,7 +13,7 @@ const fileNames = glob(arg, {}, function(err, files) {
         process.exit(1);
     }
 
-    var outputter = new o.Output.JsonOutput("output.json");
+    var outputter = new o.Output.JsonOutput("ts-analysis-results.json");
     var analyzer = new tsa.SonarTypeScript.Analyzer(outputter);
     
     files.forEach(fileName => {
