@@ -13,10 +13,9 @@ export module SonarTypeScript {
         
         public analyzeFile(sourceFile: ts.SourceFile) {
             var fileMetrics = new d.Domain.FileMetric();
+            fileMetrics.FileName = sourceFile.fileName;
 
             this.analyzeNode(sourceFile, fileMetrics, sourceFile);
-
-            console.log("File: " + sourceFile.fileName);
             
             this.outputter.writeMetric(fileMetrics);
         }
@@ -39,6 +38,11 @@ export module SonarTypeScript {
                         var lineAndChar = sourceFile.getLineAndCharacterOfPosition(node.end);
                         fileMetrics.NumberOfLines = lineAndChar.line + 1;
                         break;
+                    case ts.SyntaxKind.NewLineTrivia:
+                        if(node.getEnd() - node.getStart() > 0) {
+                            fileMetrics.LinesOfCode++;
+                        }
+                        break;    
                     default:
                         break;
                 }
