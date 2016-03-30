@@ -17,8 +17,10 @@ export module Output {
             this.allMetrics.push(metric);
         }
         
-        public close() {
-            jsonfile.writeFile(this.fileName, this.allMetrics);
+        public close(callback: Function) {
+            jsonfile.writeFile(this.fileName, this.allMetrics, { spaces: 2 }, function(err) {
+                callback(err);
+            });
         }
     }
 }
