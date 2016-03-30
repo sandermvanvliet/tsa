@@ -37,12 +37,8 @@ export module SonarTypeScript {
                     case ts.SyntaxKind.EndOfFileToken:
                         var lineAndChar = sourceFile.getLineAndCharacterOfPosition(node.end);
                         fileMetrics.NumberOfLines = lineAndChar.line + 1;
+                        fileMetrics.LinesOfCode = fileMetrics.NumberOfLines;
                         break;
-                    case ts.SyntaxKind.NewLineTrivia:
-                        if(node.getEnd() - node.getStart() > 0) {
-                            fileMetrics.LinesOfCode++;
-                        }
-                        break;    
                     default:
                         break;
                 }
