@@ -27,6 +27,9 @@ const fileNames = glob(arg, {}, function(err, files) {
 
         analyzer.analyzeFile(sourceFile);
     });
+    console.log("done. closing file");
     
     outputter.close();
+    
+    console.log("analysis complete");
 });

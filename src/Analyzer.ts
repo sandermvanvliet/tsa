@@ -32,6 +32,7 @@ export module SonarTypeScript {
                         fileMetrics.NumberOfClasses++;
                         break;
                     case ts.SyntaxKind.MethodDeclaration:
+                    case ts.SyntaxKind.FunctionDeclaration:
                         fileMetrics.NumberOfMethods++;
                         break;
                     case ts.SyntaxKind.EndOfFileToken:
