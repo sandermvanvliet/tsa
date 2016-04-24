@@ -42,6 +42,7 @@ export module SonarTypeScript {
         }
 
         private prevTokenKind: ts.SyntaxKind;
+        private onlyWhitespaceSinceLastNewLine: boolean = true;
 
         private updateMetricFor(kind: ts.SyntaxKind, fileMetrics: d.Domain.FileMetric) {
             console.log("kind: " + ts.SyntaxKind[kind]);
@@ -63,9 +64,12 @@ export module SonarTypeScript {
                     fileMetrics.NumberOfLines++;
                     fileMetrics.LinesOfCode++;
              
-                    if (this.prevTokenKind != null && this.prevTokenKind == ts.SyntaxKind.NewLineTrivia) {
+                    if (this.onlyWhitespaceSinceLastNewLine) {
                         fileMetrics.LinesOfCode--;
                     }
+                    
+                    // Reset whitespace test
+                    this.onlyWhitespaceSinceLastNewLine = true;
                     
                     break;
                 default:
@@ -73,6 +77,10 @@ export module SonarTypeScript {
             }
 
             this.prevTokenKind = kind;
+            
+            if(kind != ts.SyntaxKind.WhitespaceTrivia && kind != ts.SyntaxKind.NewLineTrivia) {
+                this.onlyWhitespaceSinceLastNewLine = false;
+            }
         }
     }
 }
