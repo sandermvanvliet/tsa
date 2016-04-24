@@ -1,5 +1,5 @@
 {
-  "name": "@codenizer/tsa",
+  "name": "tsa",
   "version": "0.0.1",
   "description": "TypeScript code analysis",
   "main": "bin/tsa.js",
