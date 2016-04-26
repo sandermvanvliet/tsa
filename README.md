@@ -1,6 +1,6 @@
 # TypeScript Analyzer (tsa)
 This is the analysis tool used by the [sonar-typescript-plugin](https://github.com/sandermvanvliet/sonar-typescript-plugin). 
-It uses the TypeScript library to parse files and provide metrics on code.
+It uses the TypeScript library to parse source files and provide metrics on code.
 
 ## Suggestions and contributions
 I'm open to pull requests and suggestions. If you feel something is missing, please let me know and open a new issue. If you just want to say hi that's fine too ;-)
