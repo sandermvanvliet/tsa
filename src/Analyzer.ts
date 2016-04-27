@@ -80,10 +80,9 @@ export module SonarTypeScript {
                     fileMetrics.LinesOfComments += numberOfLinesInComment;
                     
                     // Note: subtract 1 because the NewLineTrivia is counted in the next token
-                    fileMetrics.NumberOfLines += numberOfLinesInComment - 1; 
+                    fileMetrics.LinesOfCode += numberOfLinesInComment - 1; 
                     break;
                 case ts.SyntaxKind.NewLineTrivia:
-                    fileMetrics.NumberOfLines++;
                     fileMetrics.LinesOfCode++;
 
                     if (this.onlyWhitespaceSinceLastNewLine) {

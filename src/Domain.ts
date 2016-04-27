@@ -5,7 +5,6 @@ export module Domain {
         NumberOfInterfaces: number = 0;
         NumberOfClasses: number = 0;
         NumberOfMethods: number = 0;
-        NumberOfLines: number = 0;
         LinesOfCode: number = 0;
         LinesOfComments: number = 0;
     };
