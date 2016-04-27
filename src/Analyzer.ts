@@ -19,6 +19,8 @@ export module SonarTypeScript {
 
             this.initializeState(sourceFile.getFullText());
             this.scanFile(sourceFile, fileMetrics);
+            
+            this.parseFile(sourceFile, fileMetrics);
 
             this.outputter.writeMetric(fileMetrics);
         }
@@ -30,6 +32,12 @@ export module SonarTypeScript {
                 console.log(this.scanner.getTokenText());
                 token = this.scanner.scan();
             }
+        }
+        
+        private parseFile(node: ts.Node, metrics: d.Domain.FileMetric) {
+            this.updateMetricFor(node.kind, metrics, node.getText());
+            node.getChildren().forEach(child => this.parseFile(child, metrics));
+            
         }
 
         private initializeState(text: string): void {
