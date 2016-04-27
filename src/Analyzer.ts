@@ -60,25 +60,31 @@ export module SonarTypeScript {
                 case ts.SyntaxKind.FunctionDeclaration:
                     fileMetrics.NumberOfMethods++;
                     break;
+                case ts.SyntaxKind.SingleLineCommentTrivia:
+                    fileMetrics.LinesOfComments++;
+                    break;
+                case ts.SyntaxKind.MultiLineCommentTrivia:
+                    fileMetrics.LinesOfComments++;
+                    break;
                 case ts.SyntaxKind.NewLineTrivia:
                     fileMetrics.NumberOfLines++;
                     fileMetrics.LinesOfCode++;
-             
+
                     if (this.onlyWhitespaceSinceLastNewLine) {
                         fileMetrics.LinesOfCode--;
                     }
-                    
+
                     // Reset whitespace test
                     this.onlyWhitespaceSinceLastNewLine = true;
-                    
+
                     break;
                 default:
                     break;
             }
 
             this.prevTokenKind = kind;
-            
-            if(kind != ts.SyntaxKind.WhitespaceTrivia && kind != ts.SyntaxKind.NewLineTrivia) {
+
+            if (kind != ts.SyntaxKind.WhitespaceTrivia && kind != ts.SyntaxKind.NewLineTrivia) {
                 this.onlyWhitespaceSinceLastNewLine = false;
             }
         }

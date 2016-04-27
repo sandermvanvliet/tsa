@@ -7,5 +7,6 @@ export module Domain {
         NumberOfMethods: number = 0;
         NumberOfLines: number = 0;
         LinesOfCode: number = 0;
+        LinesOfComments: number = 0;
     };
 }
