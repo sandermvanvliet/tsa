@@ -26,7 +26,7 @@ export module SonarTypeScript {
         private scanFile(sourceFile: ts.SourceFile, metrics: d.Domain.FileMetric) {
             var token = this.scanner.scan();
             while (token != ts.SyntaxKind.EndOfFileToken) {
-                this.updateMetricFor(<ts.SyntaxKind>token, metrics);
+                this.updateMetricFor(<ts.SyntaxKind>token, metrics, this.scanner.getTokenText());
                 console.log(this.scanner.getTokenText());
                 token = this.scanner.scan();
             }
@@ -44,7 +44,7 @@ export module SonarTypeScript {
         private prevTokenKind: ts.SyntaxKind;
         private onlyWhitespaceSinceLastNewLine: boolean = true;
 
-        private updateMetricFor(kind: ts.SyntaxKind, fileMetrics: d.Domain.FileMetric) {
+        private updateMetricFor(kind: ts.SyntaxKind, fileMetrics: d.Domain.FileMetric, tokenText: string) {
             console.log("kind: " + ts.SyntaxKind[kind]);
             switch (kind) {
                 case ts.SyntaxKind.ModuleDeclaration:
@@ -64,7 +64,15 @@ export module SonarTypeScript {
                     fileMetrics.LinesOfComments++;
                     break;
                 case ts.SyntaxKind.MultiLineCommentTrivia:
-                    fileMetrics.LinesOfComments++;
+                    var numberOfLinesInComment = tokenText.split("\n").length;
+                    
+                    // The scanner treats a multiline comment as one token and ignores NewLineTrivia inside it
+                    // we need to manually detect newlines and increment the lines of comments and the 
+                    // number of lines metrics with the number of lines found in the multiline comment
+                    fileMetrics.LinesOfComments += numberOfLinesInComment;
+                    
+                    // Note: subtract 1 because the NewLineTrivia is counted in the next token
+                    fileMetrics.NumberOfLines += numberOfLinesInComment - 1; 
                     break;
                 case ts.SyntaxKind.NewLineTrivia:
                     fileMetrics.NumberOfLines++;
