@@ -12,9 +12,15 @@ const fileNames = glob(arg, {}, function(err, files) {
         console.log(err);
         process.exit(1);
     }
-
-    var outputter = new o.Output.JsonOutput("ts-analysis-results.json");
+    
+    const outputFileName = "ts-analysis-results.json";
+    
+    var outputter = new o.Output.JsonOutput(outputFileName);
     var analyzer = new tsa.SonarTypeScript.Analyzer(outputter);
+    
+    if(fs.existsSync(outputFileName)) {
+        fs.unlinkSync(outputFileName);
+    }
     
     files.forEach(fileName => {
         console.log("Parsing: " + fileName);
