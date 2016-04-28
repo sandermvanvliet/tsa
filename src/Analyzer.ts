@@ -29,7 +29,6 @@ export module SonarTypeScript {
             var token = this.scanner.scan();
             while (token != ts.SyntaxKind.EndOfFileToken) {
                 this.updateMetricFor(<ts.SyntaxKind>token, metrics, this.scanner.getTokenText());
-                console.log(this.scanner.getTokenText());
                 token = this.scanner.scan();
             }
         }
@@ -44,6 +43,7 @@ export module SonarTypeScript {
             this.scanner.setText(text);
             this.scanner.setOnError((message: ts.DiagnosticMessage, length: number) => {
                 console.error(message);
+                process.exit(1);
             });
             this.scanner.setScriptTarget(ts.ScriptTarget.ES5);
             this.scanner.setLanguageVariant(ts.LanguageVariant.Standard);
@@ -53,7 +53,6 @@ export module SonarTypeScript {
         private onlyWhitespaceSinceLastNewLine: boolean = true;
 
         private updateMetricFor(kind: ts.SyntaxKind, fileMetrics: d.Domain.FileMetric, tokenText: string) {
-            console.log("kind: " + ts.SyntaxKind[kind]);
             switch (kind) {
                 case ts.SyntaxKind.ModuleDeclaration:
                     fileMetrics.NumberOfModules++;
