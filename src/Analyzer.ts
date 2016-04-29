@@ -3,8 +3,11 @@
 
 import {readFileSync} from "fs";
 import * as ts from "typescript";
+import * as fs from "fs";
 import d = require("./Domain");
 import o = require("./JsonOutput");
+import * as Linter from "tslint";
+import {findConfiguration} from "tslint";
 
 export module SonarTypeScript {
     export class Analyzer {
@@ -16,34 +19,66 @@ export module SonarTypeScript {
         public analyzeFile(sourceFile: ts.SourceFile) {
             var fileMetrics = new d.Domain.FileMetric();
             fileMetrics.FileName = sourceFile.fileName;
-
-            this.initializeState(sourceFile.getFullText());
-            this.scanFile(sourceFile, fileMetrics);
             
+            const contents = fs.readFileSync(fileMetrics.FileName, "utf8");
+
+            this.initializeState(contents);
+            this.scanFile(fileMetrics);
+
             this.parseFile(sourceFile, fileMetrics);
+
+            this.lintFile(sourceFile, fileMetrics, contents);
 
             this.outputter.writeMetric(fileMetrics);
         }
 
-        private scanFile(sourceFile: ts.SourceFile, metrics: d.Domain.FileMetric) {
+        private scanFile(metrics: d.Domain.FileMetric) {
             var token = this.scanner.scan();
             while (token != ts.SyntaxKind.EndOfFileToken) {
                 this.updateMetricFor(<ts.SyntaxKind>token, metrics, this.scanner.getTokenText());
                 token = this.scanner.scan();
             }
         }
-        
+
         private parseFile(node: ts.Node, metrics: d.Domain.FileMetric) {
             this.updateMetricFor(node.kind, metrics, node.getText());
             node.getChildren().forEach(child => this.parseFile(child, metrics));
-            
+
+        }
+
+        private lintFile(node: ts.Node, metrics: d.Domain.FileMetric, contents: string) {
+            var fileName = node.getSourceFile().fileName;
+
+            var configuration = findConfiguration("tslint.json", fileName);
+
+            var linter = new Linter(
+                fileName,
+                contents,
+                {
+                    configuration,
+                    formatter: "json",
+                    formattersDirectory: null,
+                    rulesDirectory: configuration.rulesDirectory
+                });
+
+            var lintResult = linter.lint();
+
+            lintResult.failures.forEach(element => {
+                let pos = element.getStartPosition().getLineAndCharacter();
+                metrics.LintIssues.push(
+                    {
+                        "rule": element.getRuleName(),
+                        "message": element.getFailure(),
+                        "line": pos.line + 1,
+                        "character": pos.character + 1
+                    }
+                );
+            });
         }
 
         private initializeState(text: string): void {
             this.scanner.setText(text);
-            this.scanner.setOnError((message: ts.DiagnosticMessage, length: number) => {
-                console.error(message);
-            });
+            this.scanner.setOnError((message: ts.DiagnosticMessage, length: number) => {});
             this.scanner.setScriptTarget(ts.ScriptTarget.ES5);
             this.scanner.setLanguageVariant(ts.LanguageVariant.Standard);
         }
@@ -71,14 +106,14 @@ export module SonarTypeScript {
                     break;
                 case ts.SyntaxKind.MultiLineCommentTrivia:
                     var numberOfLinesInComment = tokenText.split("\n").length;
-                    
+
                     // The scanner treats a multiline comment as one token and ignores NewLineTrivia inside it
                     // we need to manually detect newlines and increment the lines of comments and the 
                     // number of lines metrics with the number of lines found in the multiline comment
                     fileMetrics.LinesOfComments += numberOfLinesInComment;
-                    
+
                     // Note: subtract 1 because the NewLineTrivia is counted in the next token
-                    fileMetrics.LinesOfCode += numberOfLinesInComment - 1; 
+                    fileMetrics.LinesOfCode += numberOfLinesInComment - 1;
                     break;
                 case ts.SyntaxKind.NewLineTrivia:
                     fileMetrics.LinesOfCode++;

@@ -19,6 +19,7 @@
     "jsonfile": "^2.2.3",
     "node-glob": "^1.2.0",
     "systemjs": "^0.19.24",
+    "tslint": "^3.8.1",
     "typescript": "^1.8.9"
   },
   "devDependencies": {
