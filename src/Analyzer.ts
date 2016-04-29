@@ -43,7 +43,6 @@ export module SonarTypeScript {
             this.scanner.setText(text);
             this.scanner.setOnError((message: ts.DiagnosticMessage, length: number) => {
                 console.error(message);
-                process.exit(1);
             });
             this.scanner.setScriptTarget(ts.ScriptTarget.ES5);
             this.scanner.setLanguageVariant(ts.LanguageVariant.Standard);
